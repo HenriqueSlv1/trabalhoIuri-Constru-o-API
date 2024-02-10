@@ -1,0 +1,24 @@
+{
+  "Livros": [
+    {
+      "id": 1,
+      "nome": "Nação Dopamina",
+      "autor": "Anna Lembke"
+    },
+    {
+      "id": 2,
+      "nome": "Prisioneiros da mente",
+      "autor": "Augusto Cury"
+    }
+  ],
+  "Leitores": [
+    {
+      "id": 1,
+      "nome": "Henrique da Silva"
+    },
+    {
+      "id": 2,
+      "nome": "Alice freitas"
+    }
+  ]
+}

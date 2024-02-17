@@ -47,37 +47,15 @@ server.put('/livros/:id', (req, res) => {
     return res.json({ mensagem: 'Livro atualizado!', dados: dados.Livros[indiceLivro] });
 });
 
-server.delete("/livros/:id", async (req, res) => {
-    const livroId = req.params.id;
-    const url = `http://localhost:3000/livros/${livroId}`;
-    
-    try {
-        const response = await fetch(url, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error('Erro ao excluir o livro');
-        }
+server.delete('/livros/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    dados.Livros = dados.Livros.filter(l => l.id !== id);
 
-        const data = await response.json();
-        console.log(data);
-        res.status(200).json({ mensagem: "Livro excluído com sucesso" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ erro: 'Erro ao excluir o livro' });
-    }
+    salvarDados(dados);
+    return res.status(200).json({ mensagem: "Usuário excluido com sucesso."});
 });
 
-function salvarDados(dados) {
-    try {
-        fs.writeFileSync(__dirname + '/data/dados.json', JSON.stringify(dados, null, 2));
-        console.log('Dados salvos com sucesso!');
-    } catch (error) {
-        console.error('Erro ao salvar os dados:', error);
-    }
+function salvarDados(){
+    fs.writeFileSync(__dirname + '/data/dados.json', JSON.stringify(dados, null, 2))
 }
+

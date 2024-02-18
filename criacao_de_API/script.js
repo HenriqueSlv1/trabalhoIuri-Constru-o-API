@@ -42,9 +42,8 @@ booksForm.addEventListener('submit', (e) => {
         .catch(error => console.error('Erro:', error));
 });
 
-
 function deleteBook(book) {
-    fetch(`/livros/${book.id}`, {
+    fetch(`http://localhost:3000/livros/${book}`, {
         method: 'DELETE',
     })
     .then(() => {

@@ -48,7 +48,7 @@ server.put('/livros/:id', (req, res) => {
 });
 
 server.delete('/livros/:id', (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     dados.Livros = dados.Livros.filter(l => l.id !== id);
 
     salvarDados(dados);

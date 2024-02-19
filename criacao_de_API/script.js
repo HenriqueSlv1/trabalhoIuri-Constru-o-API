@@ -1,58 +1,46 @@
-const booksForm = document.getElementById("books-form");
-const booksList = document.getElementById("books-list");
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('https://www.googleapis.com/books/v1/volumes?q=flowers&filter=free-ebooks&maxResults=10')
+    .then(response => response.json())
+    .then(data => {
+        const livrosDiv = document.getElementById('livros');
+        data.items.forEach(item => {
+            const livroDiv = document.createElement('div');
+            livroDiv.classList.add('livro');
 
-function listBooks() {
-    fetch('http://localhost:3000/livros')
-        .then(response => response.json())
-        .then(data => {
-            booksList.innerHTML = '';
-            data.forEach(book => {
-                const li = document.createElement('li');
-                li.innerHTML = `${book.nome} - autor: ${book.autor}, id: ${book.id}`;
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Excluir';
-                deleteButton.addEventListener('click', () => deleteBook(book.id));
-                li.appendChild(deleteButton);
-                booksList.appendChild(li);
-            });
-        })
-        .catch(error => console.log("Erro", error));
-}
+            const titulo = document.createElement('h2');
+            titulo.textContent = item.volumeInfo.title;
+            livroDiv.appendChild(titulo);
 
+            const autor = document.createElement('p');
+            autor.textContent = 'Autor: ' + (item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Desconhecido');
+            livroDiv.appendChild(autor);
 
-booksForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const nome = document.getElementById('nome').value;
-    const autor = document.getElementById('autor').value;
-    const id = document.getElementById('id').value;
+            const descricao = document.createElement('p');
+            descricao.textContent = 'Descrição: ' + (item.volumeInfo.description ? item.volumeInfo.description : 'Sem descrição disponível');
+            livroDiv.appendChild(descricao);
 
+            const imagem = document.createElement('img');
+            imagem.src = (item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail) ? item.volumeInfo.imageLinks.thumbnail : 'sem-imagem-disponivel.png';
+            imagem.alt = item.volumeInfo.title;
+            livroDiv.appendChild(imagem);
 
-    fetch('http://localhost:3000/livros', {
+            livrosDiv.appendChild(livroDiv);
+
+            enviarLivroParaServidor(item.volumeInfo);
+        });
+    })
+    .catch(error => console.error('Erro ao obter os dados:', error));
+});
+function enviarLivroParaServidor(livroInfo) {
+    fetch('/adicionarLivro', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ nome: nome, autor: autor, id: id }),
+        body: JSON.stringify(livroInfo)
     })
-        .then(response => response.json())
-        .then(() => {
-            listBooks()
-            booksForm.reset();
-        })
-        .catch(error => console.error('Erro:', error));
-});
-
-function deleteBook(book) {
-    fetch(`http://localhost:3000/livros/${book}`, {
-        method: 'DELETE',
-    })
-    .then(() => {
-        listBooks(); // Aqui deve ser listBooks() em vez de listUsers()
-    })
-    .catch(error => console.error('Erro:', error));
+    .then(response => response.json())
+    .then(data => console.log('Livro adicionado ao arquivo dados.json:', data))
+    .catch(error => console.error('Erro ao adicionar livro ao arquivo dados.json:', error));
 }
 
-
-
-
-listBooks() 

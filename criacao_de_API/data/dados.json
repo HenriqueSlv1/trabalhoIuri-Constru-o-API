@@ -1,13 +1,11 @@
 {
-  "Livros": [],
-  "Leitores": [
+  "Livros": [
     {
       "id": 1,
-      "nome": "Henrique da Silva"
-    },
-    {
-      "id": 2,
-      "nome": "Alice Freitas"
+      "titulo": "Livro 1",
+      "autor": "Autor 1",
+      "descricao": "Descrição do Livro 1",
+      "url_imagem": "https://example.com/imagem1.jpg"
     }
   ]
 }
